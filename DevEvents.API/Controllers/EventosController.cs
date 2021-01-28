@@ -1,6 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using DevEvents.API.Entities;
+using DevEvents.API.Persistencia;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevEvents.API.Controllers
 {
@@ -8,30 +12,44 @@ namespace DevEvents.API.Controllers
     [Route("api/eventos")]
     public class EventosController : ControllerBase
     {
+        private readonly DevEventsDbContext _dbContext;
+        public EventosController(DevEventsDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
         [HttpGet]
         public IActionResult ObterEventos()
         {
-            var evento = new Evento
-            {
-                Titulo = "Bootcamp ASPNET Core",
-                Descricao = "Um super evento, para desenvolvedores",
-                DataInicio = new DateTime(2021, 01, 25),
-                DataFim = new DateTime(2021, 01, 29)
-            };
-            return Ok(evento);
+            var eventos = _dbContext.Eventos.ToList();
+            return Ok(eventos);
         }
+
         // api/evento/ 1
         [HttpGet("{id}")]
         public IActionResult ObterEvento(int id)
         {
-            return Ok();
+            var evento = _dbContext.Eventos
+                .Include(e => e.Categoria)
+                .Include(e => e.Usuario)
+                .SingleOrDefault(e => e.Id == id);
+
+            if (evento == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(evento);
         }
 
         // api/eventos
         [HttpPost]
         public IActionResult Cadastrar([FromBody] Evento evento)
         {
-            return Ok();
+            _dbContext.Eventos.Add(evento);
+            _dbContext.SaveChanges();
+            
+            return NoContent();
         }
 
         [HttpPut("{id}")]
@@ -51,6 +69,30 @@ namespace DevEvents.API.Controllers
         [HttpPost("{id}/usuarios/{idUsuario}/inscrever")]
         public IActionResult Inscrever(int id, int idUsuario, [FromBody] Inscricao inscricao)
         {
+            return NoContent();
+        }
+
+        [HttpPost("popular")]
+        public IActionResult Popular()
+        {
+            var usuario = new Usuario
+            {
+                NomeCompleto = "Franco dev",
+                Email = "franco@gmail.com"
+            };
+
+            var categorias = new List<Categoria>
+            {
+                new Categoria { Descricao = "C#" },
+                new Categoria { Descricao = "Flutter" },
+                new Categoria { Descricao = "Xamarin" }
+            };
+
+            _dbContext.Usuarios.Add(usuario);
+            _dbContext.Categorias.AddRange(categorias);
+
+            _dbContext.SaveChanges();
+
             return NoContent();
         }
     }
