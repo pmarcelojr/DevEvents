@@ -25,11 +25,12 @@ namespace DevEvents.API.Controllers
             return Ok(eventos);
         }
 
-        // api/evento/ 1
+        // api/evento/1
         [HttpGet("{id}")]
         public IActionResult ObterEvento(int id)
         {
-            var evento = _dbContext.Eventos
+            var evento = _dbContext
+                .Eventos
                 .Include(e => e.Categoria)
                 .Include(e => e.Usuario)
                 .Include(e => e.Inscricoes)
@@ -89,6 +90,8 @@ namespace DevEvents.API.Controllers
         [HttpPost("{id}/usuarios/{idUsuario}/inscrever")]
         public IActionResult Inscrever(int id, int idUsuario, [FromBody] Inscricao inscricao)
         {
+            _dbContext.Inscricoes.Add(inscricao);
+            _dbContext.SaveChanges();
             return NoContent();
         }
 
