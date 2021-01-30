@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using DevEvents.API.Persistencia;
 using Microsoft.AspNetCore.Builder;
@@ -29,7 +30,11 @@ namespace DevEvents.API
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddControllers()
+                    .AddJsonOptions(options =>
+                        {
+                            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+                        });
 
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             
