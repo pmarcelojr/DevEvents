@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace DevEvents.API.Entities
 {
@@ -16,5 +17,6 @@ namespace DevEvents.API.Entities
         public Categoria Categoria { get; set; }
         public int IdUsuario { get; set; }
         public Usuario Usuario { get; set; }
+        public List<Inscricao> Inscricoes { get; set; }
     }
 }

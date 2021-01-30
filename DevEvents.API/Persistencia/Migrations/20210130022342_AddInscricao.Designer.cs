@@ -3,14 +3,16 @@ using System;
 using DevEvents.API.Persistencia;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DevEvents.API.Persistencia.Migrations
 {
     [DbContext(typeof(DevEventsDbContext))]
-    partial class DevEventsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210130022342_AddInscricao")]
+    partial class AddInscricao
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

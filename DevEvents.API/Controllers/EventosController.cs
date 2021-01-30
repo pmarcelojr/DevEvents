@@ -32,6 +32,7 @@ namespace DevEvents.API.Controllers
             var evento = _dbContext.Eventos
                 .Include(e => e.Categoria)
                 .Include(e => e.Usuario)
+                .Include(e => e.Inscricoes)
                 .SingleOrDefault(e => e.Id == id);
 
             if (evento == null)
@@ -80,7 +81,7 @@ namespace DevEvents.API.Controllers
 
             evento.Ativo = false;
             _dbContext.SaveChanges();
-            
+
             return NoContent();
         }
 
