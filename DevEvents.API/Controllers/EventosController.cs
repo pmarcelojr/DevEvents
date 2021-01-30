@@ -55,6 +55,15 @@ namespace DevEvents.API.Controllers
         [HttpPut("{id}")]
         public IActionResult Atualizar(int id, [FromBody] Evento evento)
         {
+            _dbContext.Eventos.Update(evento);
+
+            _dbContext.Entry(evento).Property(e => e.DataCadastro).IsModified = false;
+            _dbContext.Entry(evento).Property(e => e.Ativo).IsModified = false;
+            _dbContext.Entry(evento).Property(e => e.IdUsuario).IsModified = false;
+            
+            // var eventoDoBanco = _dbContext.Eventos.SingleOrDefault(e => e.Id == evento.Id);
+            // eventoDoBanco.Descricao = evento.Descricao;
+            _dbContext.SaveChanges();
             return NoContent();
         }
 
