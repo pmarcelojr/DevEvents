@@ -90,6 +90,13 @@ namespace DevEvents.API.Controllers
         [HttpPost("{id}/usuarios/{idUsuario}/inscrever")]
         public IActionResult Inscrever(int id, int idUsuario, [FromBody] Inscricao inscricao)
         {
+            var evento = _dbContext.Eventos.SingleOrDefault(e => e.Id == id);
+
+            if (!evento.Ativo)
+            {
+                return BadRequest();
+            }
+            
             _dbContext.Inscricoes.Add(inscricao);
             _dbContext.SaveChanges();
             return NoContent();
