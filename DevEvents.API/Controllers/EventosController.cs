@@ -60,7 +60,7 @@ namespace DevEvents.API.Controllers
             _dbContext.Entry(evento).Property(e => e.DataCadastro).IsModified = false;
             _dbContext.Entry(evento).Property(e => e.Ativo).IsModified = false;
             _dbContext.Entry(evento).Property(e => e.IdUsuario).IsModified = false;
-            
+
             // var eventoDoBanco = _dbContext.Eventos.SingleOrDefault(e => e.Id == evento.Id);
             // eventoDoBanco.Descricao = evento.Descricao;
             _dbContext.SaveChanges();
@@ -71,6 +71,16 @@ namespace DevEvents.API.Controllers
         [HttpDelete("{id}")]
         public IActionResult Cancelar(int id)
         {
+            var evento = _dbContext.Eventos.SingleOrDefault(e => e.Id == id);
+
+            if (evento == null)
+            {
+                return NotFound();
+            }
+
+            evento.Ativo = false;
+            _dbContext.SaveChanges();
+            
             return NoContent();
         }
 
